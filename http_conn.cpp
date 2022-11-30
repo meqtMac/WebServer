@@ -170,9 +170,13 @@ HttpConn::HTTP_CODE HttpConn::parse_content(char* text) {
 }
 
 HttpConn::LINE_STATUS HttpConn::parse_line() {
+    char temp;
+    for (; m_checked_index < m_read_index; )
     return LINE_OK;
 }
 
+HttpConn::HTTP_CODE HttpConn:do_request() {
+}
 bool HttpConn::write() {
     //TODO: write 
     printf("write data\n");
