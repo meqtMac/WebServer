@@ -141,11 +141,19 @@ HttpConn::HTTP_CODE HttpConn::process_read() {
             }
             break;
         case CHECK_STATE_CONTENT:
+<<<<<<< HEAD
+            ret = parse_content(text);
+            if  (ret == GET_REQUEST) {
+                return do_request();
+            }
+            line_state = LINE_OPEN;
+=======
             ret = parse_content(text);
             if (ret==GET_REQUEST) {
                 return do_request();
             }
             line_state = LINE_OPEN;
+>>>>>>> 042b104b74629952ef98a549c56584b0cfc0826b
             break;
         
         default:
