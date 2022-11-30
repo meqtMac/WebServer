@@ -127,7 +127,11 @@ HttpConn::HTTP_CODE HttpConn::process_read() {
         switch (m_check_state)
         {
         case CHECK_STATE_REQUESTLINE:
-       
+            ret = parse_request_line(text);
+            if (ret==BAD_REQUEST) {
+                return BAD_REQUEST;
+            }
+            
             break;
         case CHECK_STATE_HEADER:
             break;
