@@ -137,13 +137,19 @@ HttpConn::HTTP_CODE HttpConn::process_read() {
             if (ret==BAD_REQUEST) {
                 return BAD_REQUEST;
             }else if (ret == GET_REQUEST) {
-                
+                return do_request();
             }
             break;
         case CHECK_STATE_CONTENT:
+            ret = parse_content(text);
+            if (ret==GET_REQUEST) {
+                return do_request();
+            }
+            line_state = LINE_OPEN;
             break;
         
         default:
+            return INTERNAL_ERROR; 
             break;
         }
 

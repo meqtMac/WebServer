@@ -102,13 +102,21 @@ private:
      * @return HTTP_CODE 
      */
     HTTP_CODE parse_content(char* text);
+    /**
+     * @brief do 
+     * 
+     * @return HTTP_CODE 
+     */
+    HTTP_CODE do_request();
 
     LINE_STATUS parse_line(); /// parse one line
+    
     /// @brief get line
     /// @return geted line
     char* get_line() {
         return m_readbuf + m_start_line ;
     }
+
 };
 
 #endif
