@@ -179,7 +179,16 @@ HttpConn::HTTP_CODE HttpConn::parse_content(char* text) {
 
 HttpConn::LINE_STATUS HttpConn::parse_line() {
     char temp;
-    for (; m_checked_index < m_read_index; )
+    for (; m_checked_index < m_read_index; ++m_checked_index ) {
+        temp = m_readbuf[m_checked_index];
+        if (temp=='\t') {
+            if (m_checked_index+1 == m_read_index) {
+                return LINE_OPEN;
+            }else if (m_readbuf[m_checked_index+1] == '\n') {
+                m_readbuf[m_checked_index++] = '\0';
+            }
+        }
+    }
     return LINE_OK;
 }
 
