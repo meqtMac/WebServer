@@ -131,9 +131,14 @@ HttpConn::HTTP_CODE HttpConn::process_read() {
             if (ret==BAD_REQUEST) {
                 return BAD_REQUEST;
             }
-            
             break;
         case CHECK_STATE_HEADER:
+            ret = parse_headers(text);
+            if (ret==BAD_REQUEST) {
+                return BAD_REQUEST;
+            }else if (ret == GET_REQUEST) {
+                
+            }
             break;
         case CHECK_STATE_CONTENT:
             break;
