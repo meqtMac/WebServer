@@ -78,6 +78,13 @@ void HttpConn::init() {
     m_checked_index = 0;
     m_start_line = 0;
     m_readIndex= 0;
+    m_method = GET;
+    m_URL = 0;
+    m_version = 0;
+    m_content_length = 0;
+    m_host = 0;
+    m_linger = false;
+    bzero(m_readbuf, READ_BUFFER_SIZE);
 }
 
 void HttpConn::closeConnection() {
@@ -141,21 +148,12 @@ HttpConn::HTTP_CODE HttpConn::process_read() {
             }
             break;
         case CHECK_STATE_CONTENT:
-<<<<<<< HEAD
             ret = parse_content(text);
             if  (ret == GET_REQUEST) {
                 return do_request();
             }
             line_state = LINE_OPEN;
-=======
-            ret = parse_content(text);
-            if (ret==GET_REQUEST) {
-                return do_request();
-            }
-            line_state = LINE_OPEN;
->>>>>>> 042b104b74629952ef98a549c56584b0cfc0826b
             break;
-        
         default:
             return INTERNAL_ERROR; 
             break;
@@ -166,33 +164,121 @@ HttpConn::HTTP_CODE HttpConn::process_read() {
 }
 
 HttpConn::HTTP_CODE HttpConn::parse_request_line(char* text) {
+    m_URL = strpbrk(text, " \t");
+    *m_URL++ = '\0';
+    char* method = text;
+    if (strcasecmp(method, "GET") == 0)  {
+        m_method = GET;
+    }else {
+        return BAD_REQUEST;
+    }
+
+    m_version = strpbrk(m_URL, " \t");
+    if (!m_version) return BAD_REQUEST;
+    *m_version++ = '\0';
+    if (strcasecmp(m_version, "HTTP/1.1")!=0) return BAD_REQUEST;
+
+    if (strncasecmp(m_URL, "http://", 7) == 0 ) {
+        m_URL += 7;
+        m_URL = strchr(m_URL, '/');
+    }
+
+    if (!m_URL or m_URL[0]!='/') return BAD_REQUEST;
+    m_check_state = CHECK_STATE_HEADER;
+
     return NO_REQUEST;
 }
 
 HttpConn::HTTP_CODE HttpConn::parse_headers(char* text) {
+    // 遇到空行，表示头部字段解析完毕
+    if( text[0] == '\0' ) {
+        if ( m_content_length != 0 ) {
+            m_check_state = CHECK_STATE_CONTENT;
+            return NO_REQUEST;
+        }
+        return GET_REQUEST; // if there is no content, then parsing finished
+    } else if ( strncasecmp( text, "Connection:", 11 ) == 0 ) {
+        // Connection
+        text += 11;
+        text += strspn( text, " \t" );
+        if ( strcasecmp( text, "keep-alive" ) == 0 ) {
+            m_linger = true;
+        }
+    } else if ( strncasecmp( text, "Content-Length:", 15 ) == 0 ) {
+        // Content-Length;
+        text += 15;
+        text += strspn( text, " \t" );
+        m_content_length = atol(text);
+    } else if ( strncasecmp( text, "Host:", 5 ) == 0 ) {
+        text += 5;
+        text += strspn( text, " \t" );
+        m_host = text;
+    } else {
+        printf( "oop! unknow header %s\n", text );
+    }
     return NO_REQUEST;
 }
 
 HttpConn::HTTP_CODE HttpConn::parse_content(char* text) {
+    // judge if content is integral
+    if ( m_readIndex >= ( m_content_length + m_checked_index ) ) {
+        text[ m_content_length ] = '\0';
+        return GET_REQUEST;
+    }
     return NO_REQUEST;
 }
 
 HttpConn::LINE_STATUS HttpConn::parse_line() {
     char temp;
-    for (; m_checked_index < m_read_index; ++m_checked_index ) {
+    for (; m_checked_index < m_readIndex; ++m_checked_index ) {
         temp = m_readbuf[m_checked_index];
-        if (temp=='\t') {
-            if (m_checked_index+1 == m_read_index) {
+        if (temp=='\r') {
+            if (m_checked_index+1 == m_readIndex) {
                 return LINE_OPEN;
             }else if (m_readbuf[m_checked_index+1] == '\n') {
                 m_readbuf[m_checked_index++] = '\0';
+                m_readbuf[m_checked_index++] = '\0';
+                return LINE_OK;
             }
+            return LINE_BAD; 
+        }else if ( temp = '\n') {
+            if ((m_checked_index>1) and (m_readbuf[m_checked_index-1]=='\r')) {
+                m_readbuf[m_checked_index-1] = '\0';
+                m_readbuf[m_checked_index++] = '\0';
+                return LINE_OK;
+            }
+            return LINE_BAD;
         }
     }
-    return LINE_OK;
+    return LINE_OPEN;
 }
 
-HttpConn::HTTP_CODE HttpConn:do_request() {
+HttpConn::HTTP_CODE HttpConn::do_request() {
+    // "/home/nowcoder/webserver/resources"
+    strcpy( m_real_file, doc_root );
+    int len = strlen( doc_root );
+    strncpy( m_real_file + len, m_url, FILENAME_LEN - len - 1 );
+    // 获取m_real_file文件的相关的状态信息，-1失败，0成功
+    if ( stat( m_real_file, &m_file_stat ) < 0 ) {
+        return NO_RESOURCE;
+    }
+
+    // 判断访问权限
+    if ( ! ( m_file_stat.st_mode & S_IROTH ) ) {
+        return FORBIDDEN_REQUEST;
+    }
+
+    // 判断是否是目录
+    if ( S_ISDIR( m_file_stat.st_mode ) ) {
+        return BAD_REQUEST;
+    }
+
+    // 以只读方式打开文件
+    int fd = open( m_real_file, O_RDONLY );
+    // 创建内存映射
+    m_file_address = ( char* )mmap( 0, m_file_stat.st_size, PROT_READ, MAP_PRIVATE, fd, 0 );
+    close( fd );
+    return FILE_REQUEST;
 }
 bool HttpConn::write() {
     //TODO: write 

@@ -15,6 +15,7 @@
 #include <errno.h>
 #include "locker.hpp"
 #include <sys/uio.h>
+#include <string.h>
 
 class HttpConn{
 public:
@@ -30,7 +31,7 @@ public:
     enum CHECK_STATE { CHECK_STATE_REQUESTLINE = 0, CHECK_STATE_HEADER, CHECK_STATE_CONTENT };
     
     /// parsing result
-    enum HTTP_CODE { NO_REQUEST, GET_REQUEST, BAD_REQUEST, NO_RESOURCE, FORBIDDEN_REQUEST, FILE_REQUEST, INTERNAL_ERROR, CLOSED_CONNECTION };
+    enum HTTP_CODE { NO_REQUEST /*not yet a complete request*/, GET_REQUEST, BAD_REQUEST, NO_RESOURCE, FORBIDDEN_REQUEST, FILE_REQUEST, INTERNAL_ERROR, CLOSED_CONNECTION };
     
     /// @brief line read state
     enum LINE_STATUS { LINE_OK = 0, LINE_BAD, LINE_OPEN };
@@ -69,6 +70,15 @@ private:
     int m_readIndex; 
     int m_checked_index; // pos of the currently parsing character in readbuf
     int m_start_line; // start pos of currently parsing line
+    char * m_URL; // destination url
+    char * m_version; // Http Version, support HTTP1.1
+    METHOD m_method; // request method
+    char* m_host; // host
+    int m_content_length; // content length
+    char* m_file_address; // start pos of mmapped to memory
+    struct stat m_file_stat;// file state of destionation file
+    bool m_linger; // keep connection if true
+
     CHECK_STATE m_check_state; // my check state
     /**
      * @brief initialize rest data of the connection 
@@ -82,7 +92,7 @@ private:
      */
     HTTP_CODE process_read();
     /**
-     * @brief prase first line
+     * @brief prase first line, get request method, URL, and HTTP version
      * 
      * @param text text to be parsed
      * @return HTTP_CODE
