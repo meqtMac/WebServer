@@ -1,9 +1,9 @@
 # WebServer
 ---
-My first Cpp project: a HTTP Web Server. *Proacter* simulated with Synchronize IO, and applied IO Multiplexing using epoll API. I first meant to build a web server from scratch, but to do my homework more quickly, I end up using [Apache2](https://ubuntu.com/tutorials/install-and-configure-apache#1-overview) and [cgicc](https://www.gnu.org/software/cgicc/index.html). I also used [webbench](https://github.com/tamlok/webbench.git) to do preasure test.
+My first Cpp project: a HTTP Web Server. **Proacter** simulated with **Synchronize IO**, and applied **IO Multiplexing** using **epoll API**. I first meant to build a web server from scratch, but to do my homework more quickly, I end up using [Apache2](https://ubuntu.com/tutorials/install-and-configure-apache#1-overview) and [cgicc](https://www.gnu.org/software/cgicc/index.html). I also used [webbench](https://github.com/tamlok/webbench.git) to do preasure test.
 ## Skills
 ---
-In this project, I tried to write *Makefile* and *Doxygen* comment. I may try *CMake* after, and incorporate *MySQL*.
+In this project, I tried to write **Makefile** and **Doxygen** comment. I may try **CMake** after, and incorporate **MySQL**.
 ## Apache2
 ---
 You can follower the [tutorials](https://ubuntu.com/tutorials/install-and-configure-apache#1-overview) at webset, and you can also run my script at CGI/SetUp/install_apache2.sh
@@ -43,4 +43,11 @@ sudo cp *.cgi /usr/lib/cig-bin # $(destination) /usr/lib/cgi-bin for example
 then test it
 ```shell
 curl http://127.0.0.1/cgi-bin/$(your cgi-script)
+```
+## webbench
+It's included in the project, you recompile it and test
+```shell
+make 
+./webbench -h
+./webbench -c 10000 -t 5 http://127.0.0.1/index.html
 ```
