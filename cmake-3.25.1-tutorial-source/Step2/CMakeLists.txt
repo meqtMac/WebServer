@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # TODO 7: Create a variable USE_MYMATH using option and set default to ON
+option(USE_MYMATH "Use tutorial provided math implementation" ON)
+
 
 # configure a header file to pass some of the CMake settings
 # to the source code
