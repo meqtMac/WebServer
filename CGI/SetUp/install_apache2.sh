@@ -7,7 +7,7 @@ echo "AddHandler cgi-script .cgi .py .sh .pl"
 echo "sudo vim /etc/apache2/conf-enabled/serve-cgi-bin.conf"
 echo "sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enable/cgi.load"
 sudo /etc/init.d/apache2 restart
-echo "wsl 注意curl等操作要在windows cmd中进行"
+echo "for wsl curl must be run under windows"
 curl http://127.0.0.1
 
 # uninstall
