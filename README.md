@@ -1,11 +1,8 @@
 # WebServer
----
 My first Cpp project: a HTTP Web Server. **Proacter** simulated with **Synchronize IO**, and applied **IO Multiplexing** using **epoll API**. I first meant to build a web server from scratch, but to do my homework more quickly, I end up using [Apache2](https://ubuntu.com/tutorials/install-and-configure-apache#1-overview) and [cgicc](https://www.gnu.org/software/cgicc/index.html). I also used [webbench](https://github.com/tamlok/webbench.git) to do preasure test. I was having a [course](https://www.nowcoder.com/study/live/504) to learn about Linux, Pipe, Thread and Unix Network Programming, the Sample code was also include.
 ## Skills
----
 In this project, I tried to write **Makefile** and **Doxygen** comment. I may try **CMake** after, and incorporate **MySQL**.
 ## Apache2
----
 You can follower the [tutorials](https://ubuntu.com/tutorials/install-and-configure-apache#1-overview) at webset, and you can also run my script at CGI/SetUp/install_apache2.sh
 ```shell
 sudo apt update && sudo apt upgrade
@@ -24,7 +21,6 @@ echo "sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enable/c
 # you can then set if .cgi is runnable after restart
 ```
 ## cgicc
----
 run shell script from CGI/SetUp/install_cgicc.sh
 ```shell
 curl ftp://ftp.gnu.org/gnu/cgicc/cgicc-3.2.19.tar.gz -o cgicc-3.2.19.tar.gz
