@@ -1,3 +1,4 @@
+## tested under Ubuntu 20.04.5 LTS x86_64
 sudo apt update && sudo apt upgrade
 sudo apt-get install autoconf
 sudo apt-get install apache2
