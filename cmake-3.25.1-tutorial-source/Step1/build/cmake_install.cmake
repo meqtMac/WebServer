@@ -1,4 +1,4 @@
-# Install script for directory: /home/dachuang/Downloads/CppWeb/WebServer/cmake-3.25.1-tutorial-source/Step1
+# Install script for directory: /home/dachuang/Downloads/WebServer/cmake-3.25.1-tutorial-source/Step1
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/dachuang/Downloads/CppWeb/WebServer/cmake-3.25.1-tutorial-source/Step1/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/dachuang/Downloads/WebServer/cmake-3.25.1-tutorial-source/Step1/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
