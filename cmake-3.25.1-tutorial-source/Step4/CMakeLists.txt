@@ -21,7 +21,7 @@ target_compile_features(tutorial_compiler_flags INTERFACE cxx_std_11)
 # * Create a new variable msvc_cxx that is true if we are using CXX and MSVC
 # Hint: Use set() and COMPILE_LANG_AND_ID
 set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:CXX,ARMClang,AppleClang,Clang,CNU,LCC>")
-set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC")
+set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
 
 # TODO 6: Add warning flag compile options to the interface library
 # tutorial_compiler_flags.
