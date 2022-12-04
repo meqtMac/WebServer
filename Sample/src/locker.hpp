@@ -5,9 +5,6 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-// 线程同步机制封装类
-
-// 互斥锁类
 class locker {
 public:
     locker() {
@@ -38,7 +35,6 @@ private:
 };
 
 
-// 条件变量类
 class cond {
 public:
     cond(){
@@ -72,7 +68,6 @@ private:
 };
 
 
-// 信号量类
 class sem {
 public:
     sem() {
@@ -88,11 +83,9 @@ public:
     ~sem() {
         sem_destroy( &m_sem );
     }
-    // 等待信号量
     bool wait() {
         return sem_wait( &m_sem ) == 0;
     }
-    // 增加信号量
     bool post() {
         return sem_post( &m_sem ) == 0;
     }
