@@ -49,3 +49,4 @@ make
 ./webbench -c 10000 -t 5 http://127.0.0.1/index.html
 ```
 and I compile my code at github codespace, I tried vscode.dev and linked to github.dev. Give it a try.
+It's fantastic to code on iPad.

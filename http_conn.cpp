@@ -24,8 +24,6 @@ void addfd(int epollfd, int fd, bool oneshot) {
     }
 
     epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &event);
-    // set fd nonblock
-    setnonblocking(fd);
 }
 
 /**
